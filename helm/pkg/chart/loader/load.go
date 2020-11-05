@@ -1,19 +1,3 @@
-/*
-Copyright The Helm Authors.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-
 package loader
 
 import (
@@ -29,12 +13,12 @@ import (
 	"helm.sh/helm/v3/pkg/chart"
 )
 
-// ChartLoader loads a chart.
+// ChartLoader 加载Chart
 type ChartLoader interface {
 	Load() (*chart.Chart, error)
 }
 
-// Loader returns a new ChartLoader appropriate for the given chart name
+// Loader 返回适合给定Chart名称的新Chart加载器
 func Loader(name string) (ChartLoader, error) {
 	fi, err := os.Stat(name)
 	if err != nil {
@@ -47,13 +31,9 @@ func Loader(name string) (ChartLoader, error) {
 
 }
 
-// Load takes a string name, tries to resolve it to a file or directory, and then loads it.
-//
-// This is the preferred way to load a chart. It will discover the chart encoding
-// and hand off to the appropriate chart reader.
-//
-// If a .helmignore file is present, the directory loader will skip loading any files
-// matching it. But .helmignore is not evaluated when reading out of an archive.
+// Load接受一个字符串名称，尝试将其解析为一个文件或目录，然后加载它.
+// 这是加载Chart的首选方法。它将发现Chart编码并将其传递给适当的Chart阅读器
+// 如果存在.helmignore文件，目录加载器将跳过加载与之匹配的任何文件。但是，在读取存档时不会计算.helmignore
 func Load(name string) (*chart.Chart, error) {
 	l, err := Loader(name)
 	if err != nil {
@@ -62,7 +42,7 @@ func Load(name string) (*chart.Chart, error) {
 	return l.Load()
 }
 
-// BufferedFile represents an archive file buffered for later processing.
+// BufferedFile表示缓冲以便以后处理的存档文件.
 type BufferedFile struct {
 	Name string
 	Data []byte

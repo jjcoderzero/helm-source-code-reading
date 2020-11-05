@@ -5,7 +5,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// NoArgs returns an error if any args are included.
+// 如果包含任何参数，NoArgs将返回一个错误.
 func NoArgs(cmd *cobra.Command, args []string) error {
 	if len(args) > 0 {
 		return errors.Errorf(
@@ -17,7 +17,7 @@ func NoArgs(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-// ExactArgs returns an error if there are not exactly n args.
+// 如果没有确切的n个参数，ExactArgs返回一个错误.
 func ExactArgs(n int) cobra.PositionalArgs {
 	return func(cmd *cobra.Command, args []string) error {
 		if len(args) != n {
@@ -33,7 +33,7 @@ func ExactArgs(n int) cobra.PositionalArgs {
 	}
 }
 
-// MaximumNArgs returns an error if there are more than N args.
+// MaximumNArgs返回一个错误，如果有超过N个arg.
 func MaximumNArgs(n int) cobra.PositionalArgs {
 	return func(cmd *cobra.Command, args []string) error {
 		if len(args) > n {
@@ -49,7 +49,7 @@ func MaximumNArgs(n int) cobra.PositionalArgs {
 	}
 }
 
-// MinimumNArgs returns an error if there is not at least N args.
+// MinimumNArgs返回一个错误，如果没有至少N个args.
 func MinimumNArgs(n int) cobra.PositionalArgs {
 	return func(cmd *cobra.Command, args []string) error {
 		if len(args) < n {

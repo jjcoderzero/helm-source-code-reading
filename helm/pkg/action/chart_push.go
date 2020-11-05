@@ -6,12 +6,12 @@ import (
 	"helm.sh/helm/v3/internal/experimental/registry"
 )
 
-// ChartPush performs a chart push operation.
+// ChartPush 执行Chart push操作.
 type ChartPush struct {
 	cfg *Configuration
 }
 
-// NewChartPush creates a new ChartPush object with the given configuration.
+// NewChartPush通过给出的配置创建一个新的ChartPush对象
 func NewChartPush(cfg *Configuration) *ChartPush {
 	return &ChartPush{
 		cfg: cfg,

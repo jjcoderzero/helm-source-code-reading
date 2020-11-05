@@ -19,16 +19,14 @@ import (
 )
 
 const (
-	// CredentialsFileBasename是认证凭证文件的文件名
-	CredentialsFileBasename = "config.json"
+	CredentialsFileBasename = "config.json" // 使用给定的配置创建一个新的ChartRemove对象
 )
 
 type (
-	// Client works with OCI-compliant registries and local Helm chart cache
+	// Client 使用符合oci的仓库和本地Helm chart缓存
 	Client struct {
 		debug bool
-		// path to repository config file e.g. ~/.docker/config.json
-		credentialsFile string
+		credentialsFile string // 存储库配置文件的路径，例如~/.docker/config.json
 		out             io.Writer
 		authorizer      *Authorizer
 		resolver        *Resolver
@@ -36,7 +34,7 @@ type (
 	}
 )
 
-// NewClient returns a new registry client with config
+// NewClient 返回一个带有配置的新仓库客户端
 func NewClient(opts ...ClientOption) (*Client, error) {
 	client := &Client{
 		out: ioutil.Discard,
@@ -80,7 +78,7 @@ func NewClient(opts ...ClientOption) (*Client, error) {
 	return client, nil
 }
 
-// Login logs into a registry
+// Login 登录到仓库
 func (c *Client) Login(hostname string, username string, password string, insecure bool) error {
 	err := c.authorizer.Login(ctx(c.out, c.debug), hostname, username, password, insecure)
 	if err != nil {
@@ -90,7 +88,7 @@ func (c *Client) Login(hostname string, username string, password string, insecu
 	return nil
 }
 
-// Logout logs out of a registry
+// Logout 登出仓库
 func (c *Client) Logout(hostname string) error {
 	err := c.authorizer.Logout(ctx(c.out, c.debug), hostname)
 	if err != nil {
@@ -100,7 +98,7 @@ func (c *Client) Logout(hostname string) error {
 	return nil
 }
 
-// PushChart uploads a chart to a registry
+// PushChart上传一个Chart到仓库中
 func (c *Client) PushChart(ref *Reference) error {
 	r, err := c.cache.FetchReference(ref)
 	if err != nil {
@@ -127,7 +125,7 @@ func (c *Client) PushChart(ref *Reference) error {
 	return nil
 }
 
-// PullChart downloads a chart from a registry
+// PullChart 从仓库下载Chart
 func (c *Client) PullChart(ref *Reference) error {
 	if ref.Tag == "" {
 		return errors.New("tag explicitly required")
@@ -230,7 +228,7 @@ func (c *Client) printCacheRefSummary(r *CacheRefSummary) {
 	fmt.Fprintf(c.out, "version: %s\n", r.Chart.Metadata.Version)
 }
 
-// getChartTableRows returns rows in uitable-friendly format
+// getChartTableRows 以可使用友好的格式返回行
 func (c *Client) getChartTableRows() ([][]interface{}, error) {
 	rr, err := c.cache.ListReferences()
 	if err != nil {
@@ -246,7 +244,7 @@ func (c *Client) getChartTableRows() ([][]interface{}, error) {
 			"created": timeAgo(r.CreatedAt),
 		}
 	}
-	// Sort and convert to format expected by uitable
+	// 排序和转换为uitable期望的格式
 	rows := make([][]interface{}, len(refsMap))
 	keys := make([]string, 0, len(refsMap))
 	for key := range refsMap {

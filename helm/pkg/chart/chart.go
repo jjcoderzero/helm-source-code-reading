@@ -1,18 +1,3 @@
-/*
-Copyright The Helm Authors.
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-
 package chart
 
 import (
@@ -21,57 +6,39 @@ import (
 	"strings"
 )
 
-// APIVersionV1 is the API version number for version 1.
-const APIVersionV1 = "v1"
+const APIVersionV1 = "v1" // APIVersionV1是版本1的API版本号。
 
-// APIVersionV2 is the API version number for version 2.
-const APIVersionV2 = "v2"
+const APIVersionV2 = "v2" // APIVersionV2是版本2的API版本号。
 
-// aliasNameFormat defines the characters that are legal in an alias name.
-var aliasNameFormat = regexp.MustCompile("^[a-zA-Z0-9_-]+$")
+var aliasNameFormat = regexp.MustCompile("^[a-zA-Z0-9_-]+$") // aliasNameFormat定义别名中合法的字符。
 
-// Chart is a helm package that contains metadata, a default config, zero or more
-// optionally parameterizable templates, and zero or more charts (dependencies).
+// Chart是一个helm包，包含元数据、默认配置、零个或多个可选参数化模板，以及零个或更多Chart(依赖关系)。
 type Chart struct {
-	// Raw contains the raw contents of the files originally contained in the chart archive.
-	//
-	// This should not be used except in special cases like `helm show values`,
-	// where we want to display the raw values, comments and all.
-	Raw []*File `json:"-"`
-	// Metadata is the contents of the Chartfile.
-	Metadata *Metadata `json:"metadata"`
-	// Lock is the contents of Chart.lock.
-	Lock *Lock `json:"lock"`
-	// Templates for this chart.
-	Templates []*File `json:"templates"`
-	// Values are default config for this chart.
-	Values map[string]interface{} `json:"values"`
-	// Schema is an optional JSON schema for imposing structure on Values
-	Schema []byte `json:"schema"`
-	// Files are miscellaneous files in a chart archive,
-	// e.g. README, LICENSE, etc.
-	Files []*File `json:"files"`
+	Raw []*File `json:"-"` // Raw包含Chart存档中最初包含的文件的原始内容。这应该不使用，除非在特殊情况下，如“helm show values”，我们想要显示原始值，注释和所有。
+	Metadata *Metadata `json:"metadata"` // 元数据是Chart文件的内容
+	Lock *Lock `json:"lock"` // Lock是Chart.lock的内容。
+	Templates []*File `json:"templates"` // chart的Templates
+	Values map[string]interface{} `json:"values"` // Values是此Chart的默认配置
+	Schema []byte `json:"schema"` // Schema是一个可选的JSON模式，用于在值上强加结构
+	Files []*File `json:"files"` // Files是Chart归档中的杂项文件，如自述文件、许可文件等。
 
 	parent       *Chart
 	dependencies []*Chart
 }
 
 type CRD struct {
-	// Name is the File.Name for the crd file
-	Name string
-	// Filename is the File obj Name including (sub-)chart.ChartFullPath
-	Filename string
-	// File is the File obj for the crd
-	File *File
+	Name string // Name是crd file的File.Name
+	Filename string // FileName是obj文件的名称，包括(子)chartfullpath
+	File *File // File是crd的obj文件
 }
 
-// SetDependencies replaces the chart dependencies.
+// SetDependencies替换Chart依赖项。
 func (ch *Chart) SetDependencies(charts ...*Chart) {
 	ch.dependencies = nil
 	ch.AddDependency(charts...)
 }
 
-// Name returns the name of the chart.
+// Name返回chart的名字
 func (ch *Chart) Name() string {
 	if ch.Metadata == nil {
 		return ""
@@ -79,7 +46,7 @@ func (ch *Chart) Name() string {
 	return ch.Metadata.Name
 }
 
-// AddDependency determines if the chart is a subchart.
+// AddDependency决定Chart是否是subChart。
 func (ch *Chart) AddDependency(charts ...*Chart) {
 	for i, x := range charts {
 		charts[i].parent = ch
@@ -87,7 +54,7 @@ func (ch *Chart) AddDependency(charts ...*Chart) {
 	}
 }
 
-// Root finds the root chart.
+// Root 寻找root chart.
 func (ch *Chart) Root() *Chart {
 	if ch.IsRoot() {
 		return ch
@@ -95,16 +62,16 @@ func (ch *Chart) Root() *Chart {
 	return ch.Parent().Root()
 }
 
-// Dependencies are the charts that this chart depends on.
+// Dependencies 是此Chart所依赖的Chart.
 func (ch *Chart) Dependencies() []*Chart { return ch.dependencies }
 
-// IsRoot determines if the chart is the root chart.
+// IsRoot确定该Chart是否是根Chart
 func (ch *Chart) IsRoot() bool { return ch.parent == nil }
 
-// Parent returns a subchart's parent chart.
+// Parent 返回子Chart的父Chart
 func (ch *Chart) Parent() *Chart { return ch.parent }
 
-// ChartPath returns the full path to this chart in dot notation.
+// ChartPath以点表示法返回此图表的完整路径
 func (ch *Chart) ChartPath() string {
 	if !ch.IsRoot() {
 		return ch.Parent().ChartPath() + "." + ch.Name()
@@ -112,7 +79,7 @@ func (ch *Chart) ChartPath() string {
 	return ch.Name()
 }
 
-// ChartFullPath returns the full path to this chart.
+// ChartFullPath返回此Chart的完整路径
 func (ch *Chart) ChartFullPath() string {
 	if !ch.IsRoot() {
 		return ch.Parent().ChartFullPath() + "/charts/" + ch.Name()
@@ -120,12 +87,12 @@ func (ch *Chart) ChartFullPath() string {
 	return ch.Name()
 }
 
-// Validate validates the metadata.
+// Validate 验证元数据.
 func (ch *Chart) Validate() error {
 	return ch.Metadata.Validate()
 }
 
-// AppVersion returns the appversion of the chart.
+// AppVersion返回Chart的appversion.
 func (ch *Chart) AppVersion() string {
 	if ch.Metadata == nil {
 		return ""
@@ -133,7 +100,7 @@ func (ch *Chart) AppVersion() string {
 	return ch.Metadata.AppVersion
 }
 
-// CRDs returns a list of File objects in the 'crds/' directory of a Helm chart.
+// CRDs返回Helm Chart的“crds/”目录下的文件对象列表
 // Deprecated: use CRDObjects()
 func (ch *Chart) CRDs() []*File {
 	files := []*File{}

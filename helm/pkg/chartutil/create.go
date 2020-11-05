@@ -470,9 +470,9 @@ spec:
 // compatibility.
 var Stderr io.Writer = os.Stderr
 
-// CreateFrom creates a new chart, but scaffolds it from the src chart.
+// CreateFrom创建了一个新的Chart，但是从src Chart搭建了它。
 func CreateFrom(chartfile *chart.Metadata, dest, src string) error {
-	schart, err := loader.Load(src)
+	schart, err := loader.Load(src) // 加载starter chart
 	if err != nil {
 		return errors.Wrapf(err, "could not load %s", src)
 	}

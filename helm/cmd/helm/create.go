@@ -34,14 +34,14 @@ destination exists and there are files in that directory, conflicting files
 will be overwritten, but other files will be left alone.
 `
 
-type createOptions struct {
+type createOptions struct { // create结构体
 	starter    string // --starter
 	name       string
 	starterDir string
 }
 
 func newCreateCmd(out io.Writer) *cobra.Command {
-	o := &createOptions{}
+	o := &createOptions{} // 初始化结构体
 
 	cmd := &cobra.Command{
 		Use:   "create NAME",
@@ -50,29 +50,28 @@ func newCreateCmd(out io.Writer) *cobra.Command {
 		Args:  require.ExactArgs(1),
 		ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 			if len(args) == 0 {
-				// Allow file completion when completing the argument for the name
-				// which could be a path
+				// 当完成可能是路径的名称的参数时，允许文件完成
 				return nil, cobra.ShellCompDirectiveDefault
 			}
-			// No more completions, so disable file completion
+			// 没有更多的完成，因此禁用文件完成
 			return nil, cobra.ShellCompDirectiveNoFileComp
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			o.name = args[0]
-			o.starterDir = helmpath.DataPath("starters")
+			o.name = args[0] // 设置name
+			o.starterDir = helmpath.DataPath("starters") // 设置starter目录
 			return o.run(out)
 		},
 	}
 
-	cmd.Flags().StringVarP(&o.starter, "starter", "p", "", "the name or absolute path to Helm starter scaffold")
+	cmd.Flags().StringVarP(&o.starter, "starter", "p", "", "the name or absolute path to Helm starter scaffold") // starter选项
 	return cmd
 }
 
 func (o *createOptions) run(out io.Writer) error {
 	fmt.Fprintf(out, "Creating %s\n", o.name)
 
-	chartname := filepath.Base(o.name)
-	cfile := &chart.Metadata{
+	chartname := filepath.Base(o.name) // 获取chart名称
+	cfile := &chart.Metadata{ // 构造chart元数据
 		Name:        chartname,
 		Description: "A Helm chart for Kubernetes",
 		Type:        "application",
@@ -82,10 +81,8 @@ func (o *createOptions) run(out io.Writer) error {
 	}
 
 	if o.starter != "" {
-		// Create from the starter
-		lstarter := filepath.Join(o.starterDir, o.starter)
-		// If path is absolute, we don't want to prefix it with helm starters folder
-		if filepath.IsAbs(o.starter) {
+		lstarter := filepath.Join(o.starterDir, o.starter) // 从启动器创建
+		if filepath.IsAbs(o.starter) { // 如果路径是绝对的，我们不想在它前面加上启动器文件夹
 			lstarter = o.starter
 		}
 		return chartutil.CreateFrom(cfile, filepath.Dir(o.name), lstarter)

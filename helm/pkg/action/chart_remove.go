@@ -6,12 +6,12 @@ import (
 	"helm.sh/helm/v3/internal/experimental/registry"
 )
 
-// ChartRemove performs a chart remove operation.
+// ChartRemove执行移除Chart的操作
 type ChartRemove struct {
 	cfg *Configuration
 }
 
-// NewChartRemove creates a new ChartRemove object with the given configuration.
+// 使用给定的配置创建一个新的ChartRemove对象.
 func NewChartRemove(cfg *Configuration) *ChartRemove {
 	return &ChartRemove{
 		cfg: cfg,

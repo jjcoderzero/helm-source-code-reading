@@ -1,62 +1,22 @@
-/*
-Copyright The Helm Authors.
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-
 package chart
 
 import "time"
 
-// Dependency describes a chart upon which another chart depends.
-//
-// Dependencies can be used to express developer intent, or to capture the state
-// of a chart.
+// Dependency描述另一个Chart所依赖的一个Chart。可以用来表达开发人员的意图，或者用来捕获Chart的状态。
 type Dependency struct {
-	// Name is the name of the dependency.
-	//
-	// This must mach the name in the dependency's Chart.yaml.
-	Name string `json:"name"`
-	// Version is the version (range) of this chart.
-	//
-	// A lock file will always produce a single version, while a dependency
-	// may contain a semantic version range.
-	Version string `json:"version,omitempty"`
-	// The URL to the repository.
-	//
-	// Appending `index.yaml` to this string should result in a URL that can be
-	// used to fetch the repository index.
-	Repository string `json:"repository"`
-	// A yaml path that resolves to a boolean, used for enabling/disabling charts (e.g. subchart1.enabled )
-	Condition string `json:"condition,omitempty"`
-	// Tags can be used to group charts for enabling/disabling together
-	Tags []string `json:"tags,omitempty"`
-	// Enabled bool determines if chart should be loaded
-	Enabled bool `json:"enabled,omitempty"`
-	// ImportValues holds the mapping of source values to parent key to be imported. Each item can be a
-	// string or pair of child/parent sublist items.
-	ImportValues []interface{} `json:"import-values,omitempty"`
-	// Alias usable alias to be used for the chart
-	Alias string `json:"alias,omitempty"`
+	Name string `json:"name"` // Name是依赖项的名称。这必须与依赖关系的Chart中的名称匹配。
+	Version string `json:"version,omitempty"` // Version就是这个Chart的版本(范围)。lock文件将始终生成一个版本，而依赖项可能包含一个语义版本范围。
+	Repository string `json:"repository"`// 到存储库的URL。将index.yaml附加到该字符串后，将得到一个可用于获取存储库索引的URL。
+	Condition string `json:"condition,omitempty"` // 一个解析为布尔值的yaml路径，用于启用/禁用图表(例如subchart1.enabled)
+	Tags []string `json:"tags,omitempty"` // Tags可以用来将Chart的启用/禁用组合在一起
+	Enabled bool `json:"enabled,omitempty"` // Enabled bool决定是否应该加载Chart
+	ImportValues []interface{} `json:"import-values,omitempty"` // ImportValues保存要导入的源值到父键的映射。每个项可以是一个字符串或一对子/父子列表项。
+	Alias string `json:"alias,omitempty"` // Alias用于Chart的可用别名
 }
 
-// Lock is a lock file for dependencies.
-//
-// It represents the state that the dependencies should be in.
+// Lock是依赖项的锁文件。它表示依赖项应该处于的状态。
 type Lock struct {
-	// Generated is the date the lock file was last generated.
-	Generated time.Time `json:"generated"`
-	// Digest is a hash of the dependencies in Chart.yaml.
-	Digest string `json:"digest"`
-	// Dependencies is the list of dependencies that this lock file has locked.
-	Dependencies []*Dependency `json:"dependencies"`
+	Generated time.Time `json:"generated"` // Generated是锁文件最后生成的日期。
+	Digest string `json:"digest"` // Digest是Chart.yaml中依赖项的hash。
+	Dependencies []*Dependency `json:"dependencies"` // Dependencies是此锁定文件已锁定的依赖项的列表。
 }

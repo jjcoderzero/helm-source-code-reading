@@ -24,12 +24,11 @@ import (
 )
 
 const (
-	// CacheRootDir is the root directory for a cache
-	CacheRootDir = "cache"
+	CacheRootDir = "cache" // CacheRootDir是缓存的根目录
 )
 
 type (
-	// Cache handles local/in-memory storage of Helm charts, compliant with OCI Layout
+	// Cache处理本地/内存中Helm Charts的存储，符合OCI布局
 	Cache struct {
 		debug       bool
 		out         io.Writer
@@ -38,8 +37,8 @@ type (
 		memoryStore *orascontent.Memorystore
 	}
 
-	// CacheRefSummary contains as much info as available describing a chart reference in cache
-	// Note: fields here are sorted by the order in which they are set in FetchReference method
+	// CacheRefSummary 在缓存中包含尽可能多的可用信息来描述Chart引用
+	// Note: 这里的字段是按照在FetchReference方法中设置的顺序排序的
 	CacheRefSummary struct {
 		Name         string
 		Repo         string
@@ -55,7 +54,7 @@ type (
 	}
 )
 
-// NewCache returns a new OCI Layout-compliant cache with config
+// NewCache 通过配置返回一个新的符合OCI布局的缓存
 func NewCache(opts ...CacheOption) (*Cache, error) {
 	cache := &Cache{
 		out: ioutil.Discard,
@@ -70,7 +69,7 @@ func NewCache(opts ...CacheOption) (*Cache, error) {
 	return cache, nil
 }
 
-// FetchReference retrieves a chart ref from cache
+// FetchReference 从缓存中检索Chart引用
 func (cache *Cache) FetchReference(ref *Reference) (*CacheRefSummary, error) {
 	if err := cache.init(); err != nil {
 		return nil, err
@@ -136,7 +135,7 @@ func (cache *Cache) FetchReference(ref *Reference) (*CacheRefSummary, error) {
 	return &r, nil
 }
 
-// StoreReference stores a chart ref in cache
+// StoreReference 在缓存中存储Chart ref
 func (cache *Cache) StoreReference(ref *Reference, ch *chart.Chart) (*CacheRefSummary, error) {
 	if err := cache.init(); err != nil {
 		return nil, err
@@ -174,7 +173,7 @@ func (cache *Cache) StoreReference(ref *Reference, ch *chart.Chart) (*CacheRefSu
 	return &r, nil
 }
 
-// DeleteReference deletes a chart ref from cache
+// DeleteReference 从缓存中删除Chart引用
 // TODO: garbage collection, only manifest removed
 func (cache *Cache) DeleteReference(ref *Reference) (*CacheRefSummary, error) {
 	if err := cache.init(); err != nil {
@@ -189,7 +188,7 @@ func (cache *Cache) DeleteReference(ref *Reference) (*CacheRefSummary, error) {
 	return r, err
 }
 
-// ListReferences lists all chart refs in a cache
+// ListReferences 列出缓存中的所有Chart refs
 func (cache *Cache) ListReferences() ([]*CacheRefSummary, error) {
 	if err := cache.init(); err != nil {
 		return nil, err
@@ -216,7 +215,7 @@ func (cache *Cache) ListReferences() ([]*CacheRefSummary, error) {
 	return rr, nil
 }
 
-// AddManifest provides a manifest to the cache index.json
+// AddManifest 为缓存index.json提供一个清单
 func (cache *Cache) AddManifest(ref *Reference, manifest *ocispec.Descriptor) error {
 	if err := cache.init(); err != nil {
 		return err

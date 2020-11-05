@@ -9,13 +9,11 @@ import (
 
 // Interface 表示能够与Kubernetes API通信的客户端.KubernetesClient必须是并发安全的.
 type Interface interface {
-	// Create创建一个或多个资源。
-	Create(resources ResourceList) (*Result, error)
+	Create(resources ResourceList) (*Result, error) // Create创建一个或多个资源。
 
 	Wait(resources ResourceList, timeout time.Duration) error
 
-	// Delete删除一个或多个资源
-	Delete(resources ResourceList) (*Result, []error)
+	Delete(resources ResourceList) (*Result, []error) // Delete删除一个或多个资源
 
 	// Watch the resource in reader until it is "ready". This method
 	//
