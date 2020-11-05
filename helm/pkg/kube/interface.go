@@ -1,19 +1,3 @@
-/*
-Copyright The Helm Authors.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-
 package kube
 
 import (
@@ -23,16 +7,14 @@ import (
 	v1 "k8s.io/api/core/v1"
 )
 
-// Interface represents a client capable of communicating with the Kubernetes API.
-//
-// A KubernetesClient must be concurrency safe.
+// Interface 表示能够与Kubernetes API通信的客户端.KubernetesClient必须是并发安全的.
 type Interface interface {
-	// Create creates one or more resources.
+	// Create创建一个或多个资源。
 	Create(resources ResourceList) (*Result, error)
 
 	Wait(resources ResourceList, timeout time.Duration) error
 
-	// Delete destroys one or more resources.
+	// Delete删除一个或多个资源
 	Delete(resources ResourceList) (*Result, []error)
 
 	// Watch the resource in reader until it is "ready". This method
@@ -43,8 +25,7 @@ type Interface interface {
 	// error.
 	WatchUntilReady(resources ResourceList, timeout time.Duration) error
 
-	// Update updates one or more resources or creates the resource
-	// if it doesn't exist.
+	// Update更新一个或多个资源或者如果不存在就创建资源
 	Update(original, target ResourceList, force bool) (*Result, error)
 
 	// Build creates a resource list from a Reader
@@ -55,11 +36,10 @@ type Interface interface {
 	// Validates against OpenAPI schema if validate is true.
 	Build(reader io.Reader, validate bool) (ResourceList, error)
 
-	// WaitAndGetCompletedPodPhase waits up to a timeout until a pod enters a completed phase
-	// and returns said phase (PodSucceeded or PodFailed qualify).
+	// WaitAndGetCompletedPodPhase等待超时，直到pod进入完成阶段并返回所述阶段(PodSucceed或PodFailed qualified)。
 	WaitAndGetCompletedPodPhase(name string, timeout time.Duration) (v1.PodPhase, error)
 
-	// isReachable checks whether the client is able to connect to the cluster
+	// isReachable检测client是否能够连接到集群
 	IsReachable() error
 }
 

@@ -1,19 +1,3 @@
-/*
-Copyright The Helm Authors.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-
 package registry // import "helm.sh/helm/v3/internal/experimental/registry"
 
 import (
@@ -44,14 +28,12 @@ type (
 	}
 )
 
-// ParseReference converts a string to a Reference
+// ParseReference将字符串转换为引用
 func ParseReference(s string) (*Reference, error) {
 	if s == "" {
 		return nil, errEmptyRepo
 	}
-	// Split the components of the string on the colon or @, if it is more than 3,
-	// immediately return an error. Other validation will be performed later in
-	// the function
+	// 在冒号或@上分割字符串的组成部分，如果大于3，立即返回一个错误。其他验证将在后面的函数中执行
 	splitComponents := fixSplitComponents(referenceDelimiter.Split(s, -1))
 	if len(splitComponents) > 3 {
 		return nil, errTooManyColons
@@ -67,7 +49,7 @@ func ParseReference(s string) (*Reference, error) {
 		ref = &Reference{Repo: strings.Join(splitComponents[:2], ":"), Tag: splitComponents[2]}
 	}
 
-	// ensure the reference is valid
+	// 确保引用是有效的
 	err := ref.validate()
 	if err != nil {
 		return nil, err
@@ -84,7 +66,7 @@ func (ref *Reference) FullName() string {
 	return fmt.Sprintf("%s:%s", ref.Repo, ref.Tag)
 }
 
-// validate makes sure the ref meets our criteria
+// validate 确保ref符合我们的标准
 func (ref *Reference) validate() error {
 
 	err := ref.validateRepo()
@@ -130,7 +112,7 @@ func isValidPort(s string) bool {
 	return validPortRegEx.MatchString(s)
 }
 
-// fixSplitComponents this will modify reference parts based on presence of port
+// fixSplitComponents 这将根据端口的存在修改引用部件
 // Example: {localhost, 5000/x/y/z, 0.1.0} => {localhost:5000/x/y/z, 0.1.0}
 func fixSplitComponents(c []string) []string {
 	if len(c) <= 1 {

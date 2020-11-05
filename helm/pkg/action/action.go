@@ -1,19 +1,3 @@
-/*
-Copyright The Helm Authors.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-
 package action
 
 import (
@@ -77,21 +61,21 @@ var (
 // https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
 var ValidName = regexp.MustCompile(`^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$`)
 
-// Configuration injects the dependencies that all actions share.
+// Configuration 注入所有操作共享的依赖项.
 type Configuration struct {
-	// RESTClientGetter is an interface that loads Kubernetes clients.
+	// RESTClientGetter是一个加载kubernetes客户端的接口
 	RESTClientGetter RESTClientGetter
 
-	// Releases stores records of releases.
+	// Releases 存储版本的记录.
 	Releases *storage.Storage
 
-	// KubeClient is a Kubernetes API client.
+	// KubeClient是kubernetes API客户端.
 	KubeClient kube.Interface
 
-	// RegistryClient is a client for working with registries
+	// RegistryClient是一个使用注册中心的客户端
 	RegistryClient *registry.Client
 
-	// Capabilities describes the capabilities of the Kubernetes cluster.
+	// Capabilities 描述Kubernetes集群的功能.
 	Capabilities *chartutil.Capabilities
 
 	Log func(string, ...interface{})
@@ -361,7 +345,7 @@ func (c *Configuration) recordRelease(r *release.Release) {
 	}
 }
 
-// Init initializes the action configuration
+// Init 初始化操作配置
 func (c *Configuration) Init(getter genericclioptions.RESTClientGetter, namespace, helmDriver string, log DebugLog) error {
 	kc := kube.New(getter)
 	kc.Log = log
