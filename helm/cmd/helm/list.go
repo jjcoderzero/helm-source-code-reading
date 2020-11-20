@@ -194,6 +194,7 @@ func (r *releaseListWriter) WriteYAML(out io.Writer) error {
 }
 
 // Provide dynamic auto-completion for release names
+// 提供release name的动态自动完成
 func compListReleases(toComplete string, cfg *action.Configuration) ([]string, cobra.ShellCompDirective) {
 	cobra.CompDebugln(fmt.Sprintf("compListReleases with toComplete %s", toComplete), settings.Debug)
 

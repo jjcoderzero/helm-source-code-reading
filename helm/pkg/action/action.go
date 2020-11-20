@@ -338,7 +338,7 @@ func GetVersionSet(client discovery.ServerResourcesInterface) (chartutil.Version
 	return chartutil.VersionSet(versions), nil
 }
 
-// recordRelease with an update operation in case reuse has been set.
+// recordRelease带有更新操作，以防设置了重用。
 func (c *Configuration) recordRelease(r *release.Release) {
 	if err := c.Releases.Update(r); err != nil {
 		c.Log("warning: Failed to update release %s: %s", r.Name, err)

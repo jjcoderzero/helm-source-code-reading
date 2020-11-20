@@ -1,0 +1,6 @@
+dependencies:
+- name: postgresql
+  repository: https://kubernetes.oss-cn-hangzhou.aliyuncs.com/charts
+  version: 0.8.3
+digest: sha256:4bc4d595ff06f16017dbc5caeb9452bec76886dda4cadb26d0901195ba9144ce
+generated: 2018-02-19T17:47:56.678905+08:00

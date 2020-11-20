@@ -1,19 +1,3 @@
-/*
-Copyright The Helm Authors.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-
 package action
 
 import (
@@ -62,8 +46,7 @@ type Upgrade struct {
 	SkipCRDs bool
 	// Timeout is the timeout for this operation
 	Timeout time.Duration
-	// Wait determines whether the wait operation should be performed after the upgrade is requested.
-	Wait bool
+	Wait bool // Wait确定在请求升级之后是否应该执行等待操作。
 	// DisableHooks disables hook processing if set to true.
 	DisableHooks bool
 	// DryRun controls whether the operation is prepared, but not executed.
@@ -81,8 +64,7 @@ type Upgrade struct {
 	Recreate bool
 	// MaxHistory limits the maximum number of revisions saved per release
 	MaxHistory int
-	// Atomic, if true, will roll back on failure.
-	Atomic bool
+	Atomic bool // 如果为true, Atomic将在失败时回滚。
 	// CleanupOnFail will, if true, cause the upgrade to delete newly-created resources on a failed update.
 	CleanupOnFail bool
 	// SubNotes determines whether sub-notes are rendered in the chart.
@@ -105,14 +87,13 @@ func NewUpgrade(cfg *Configuration) *Upgrade {
 	}
 }
 
-// Run executes the upgrade on the given release.
+// Run在给定版本上执行升级
 func (u *Upgrade) Run(name string, chart *chart.Chart, vals map[string]interface{}) (*release.Release, error) {
 	if err := u.cfg.KubeClient.IsReachable(); err != nil {
 		return nil, err
 	}
 
-	// Make sure if Atomic is set, that wait is set as well. This makes it so
-	// the user doesn't have to specify both
+	// 确保设置了Atomic，也设置了wait。这样用户就不必同时指定这两个
 	u.Wait = u.Wait || u.Atomic
 
 	if err := chartutil.ValidateReleaseName(name); err != nil {
